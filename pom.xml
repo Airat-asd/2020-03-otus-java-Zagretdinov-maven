@@ -26,7 +26,6 @@
         <minimal.maven.version>3.3.9</minimal.maven.version>
         <spring-framework-bom.version>5.2.12.RELEASE</spring-framework-bom.version>
         <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
-
     </properties>
 
     <dependencyManagement>
@@ -38,7 +37,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
