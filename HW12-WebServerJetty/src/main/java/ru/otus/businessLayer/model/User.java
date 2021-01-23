@@ -3,10 +3,13 @@ package ru.otus.businessLayer.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "tUsers" )
+@Table(name = "tUsers")
 public class User {
 
     @Id
+    private String login = "";
+
+    @Column(name = "name")
     private String name = "";
 
     @Column(name = "passwordHash")
@@ -15,19 +18,18 @@ public class User {
     @Column(name = "isAnAdministrator")
     private char isAnAdministrator = 'n';
 
-    public User() {}
-
-    public User(String name) {
-        this.name = name;
+    public User() {
     }
 
-    public User(String name, int passwordHash, char isAnAdministrator) {
+    public User(String login, String name, int passwordHash, char isAnAdministrator) {
+        this.login = login;
         this.name = name;
         this.passwordHash = passwordHash;
         this.isAnAdministrator = isAnAdministrator;
     }
 
-    public User(String name, int passwordHash) {
+    public User(String login, String name, int passwordHash) {
+        this.login = login;
         this.name = name;
         this.passwordHash = passwordHash;
     }
@@ -42,6 +44,26 @@ public class User {
         }
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        if (login != null) {
+            this.login = login;
+        }
+    }
+
+    public char getIsAnAdministrator() {
+        return isAnAdministrator;
+    }
+
+    public void setIsAnAdministrator(char isAnAdministrator) {
+        if (isAnAdministrator == 'y' || isAnAdministrator == 'n') {
+            this.isAnAdministrator = isAnAdministrator;
+        }
+    }
+
     public int getPasswordHash() {
         return passwordHash;
     }
@@ -50,18 +72,11 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public char isAnAdministrator() {
-        return isAnAdministrator;
-    }
-
-    public void setAnAdministrator(char anAdministrator) {
-        isAnAdministrator = anAdministrator;
-    }
-
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "login=" + login +
+                ", name=" + name +
                 ", passwordHash=" + passwordHash +
                 ", administrator=" + isAnAdministrator +
                 '}';

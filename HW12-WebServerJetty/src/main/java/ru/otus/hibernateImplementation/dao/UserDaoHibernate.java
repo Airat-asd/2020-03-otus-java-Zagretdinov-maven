@@ -10,6 +10,7 @@ import ru.otus.daoLayer.core.sessionmanager.SessionManager;
 import ru.otus.hibernateImplementation.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.hibernateImplementation.sessionmanager.SessionManagerHibernate;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserDaoHibernate implements UserDao {
@@ -21,10 +22,21 @@ public class UserDaoHibernate implements UserDao {
     }
 
     @Override
-    public Optional<User> findByName(String name) {
+    public Optional<User> findByLogin(String login) {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try {
-            return Optional.ofNullable(currentSession.getHibernateSession().find(User.class, name));
+            return Optional.ofNullable(currentSession.getHibernateSession().find(User.class, login));
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<List<User>> getAllUsers() {
+        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        try {
+            return Optional.ofNullable(currentSession.getHibernateSession().createQuery("From User").list());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -58,22 +70,6 @@ public class UserDaoHibernate implements UserDao {
             throw new DaoException(e);
         }
     }
-
-//    @Override
-//    public void insertOrUpdate(User user) {
-//        DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
-//        try {
-//            Session hibernateSession = currentSession.getHibernateSession();
-//            if (! (user.getName().isEmpty())) {
-//                hibernateSession.merge(user);
-//            } else {
-//                hibernateSession.persist(user);
-//                hibernateSession.flush();
-//            }
-//        } catch (Exception e) {
-//            throw new DaoException(e);
-//        }
-//    }
 
     @Override
     public SessionManager getSessionManager() {

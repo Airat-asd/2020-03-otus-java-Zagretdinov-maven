@@ -42,7 +42,7 @@ public class UsersWebServerWithFilterBasedSecurity implements UsersWebServer {
         this.authService = authService;
     }
 
-    protected Handler applySecurity(ServletContextHandler servletContextHandler, String... paths) {
+    private Handler applySecurity(ServletContextHandler servletContextHandler, String... paths) {
         servletContextHandler.addServlet(new ServletHolder(new LoginServlet(templateProcessor, authService)), "/login");
         AuthorizationFilter authorizationFilter = new AuthorizationFilter();
         Arrays.stream(paths).forEachOrdered(path ->

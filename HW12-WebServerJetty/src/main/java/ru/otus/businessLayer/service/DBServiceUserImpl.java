@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.businessLayer.model.User;
 import ru.otus.daoLayer.core.dao.UserDao;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DBServiceUserImpl implements DBServiceUser {
@@ -23,7 +24,7 @@ public class DBServiceUserImpl implements DBServiceUser {
             try {
                 userDao.insert(user);
                 sessionManager.commitSession();
-                logger.info("save {}, id: {}", user.getClass().getSimpleName(), user.getName());
+                logger.info("save {}, id: {}", user.getClass().getSimpleName(), user.getLogin());
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 sessionManager.rollbackSession();
@@ -33,11 +34,27 @@ public class DBServiceUserImpl implements DBServiceUser {
     }
 
     @Override
-    public Optional<User> getUser(String name) {
+    public Optional<User> getUser(String login) {
         try (var sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Optional<User> userOptional = userDao.findByName(name);
+                Optional<User> userOptional = userDao.findByLogin(login);
+                logger.info("client: {}", userOptional.orElse(null));
+                return userOptional;
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                sessionManager.rollbackSession();
+            }
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<List<User>> getAllUsers() {
+        try (var sessionManager = userDao.getSessionManager()) {
+            sessionManager.beginSession();
+            try {
+                Optional<List<User>> userOptional = userDao.getAllUsers();
                 logger.info("client: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {

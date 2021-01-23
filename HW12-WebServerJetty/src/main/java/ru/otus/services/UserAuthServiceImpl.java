@@ -18,7 +18,7 @@ public class UserAuthServiceImpl implements UserAuthService {
         boolean authenticate = false;
         Optional<User> user = dbServiceUser.getUser(name);
         if (user.isPresent()) {
-            if ((password.hashCode() == user.get().getPasswordHash()) && (user.get().isAnAdministrator() == 'y')) {
+            if ((password.hashCode() == user.get().getPasswordHash()) && (user.get().getIsAnAdministrator() == 'y')) {
                 authenticate =true;
             }
         }

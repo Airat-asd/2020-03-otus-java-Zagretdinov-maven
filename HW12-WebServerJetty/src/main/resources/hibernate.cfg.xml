@@ -4,13 +4,12 @@
 
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+<!--    <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>-->
     <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:orcl</property>
 
-    <property name="hibernate.connection.url">jdbc:oracle:thin:@msk-ds01cpt:1521:cpp</property>
-
-    <property name="hibernate.connection.username">city</property>
-    <property name="hibernate.connection.password">plus</property>
+    <property name="hibernate.connection.username">asd</property>
+    <property name="hibernate.connection.password">asd</property>
 
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.generate_statistics">true</property>
