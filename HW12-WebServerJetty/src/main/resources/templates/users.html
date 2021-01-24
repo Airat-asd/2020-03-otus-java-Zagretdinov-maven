@@ -3,19 +3,21 @@
     <title>Пользователи</title>
     <script>
         function addUser() {
-            // const userIdTextBox = document.getElementById('userIdTextBox');
-            // const userDataContainer = document.getElementById('userDataContainer');
-            // const id = userIdTextBox.value;
+            const name = userNameTextBox.value;
+            const login = userLoginTextBox.value;
+            const password = userPasswordTextBox.value;
             fetch('api/user/' + name + '&' + login + '&' + password)
+                .then(window.alert(response))
+                .then(window.location.reload())
         }
     </script>
 </head>
 
 <body>
 <h4>Добавить пользователя</h4>
-<input type="text" name = "userNameTextBox" value="name" placeholder="Введите имя пользователя">
-<input type="text" login = "userLoginTextBox" value="login" placeholder="Введите логин пользователя">
-<input type="text" password = "userPasswordTextBox" value="password" placeholder="Введите пароль пользователя">
+<input type="text" id = "userNameTextBox" value="name" placeholder="Введите имя пользователя">
+<input type="text" id = "userLoginTextBox" value="login" placeholder="Введите логин пользователя">
+<input type="text" id = "userPasswordTextBox" value="password" placeholder="Введите пароль пользователя">
 <button onclick="addUser()">Добавить</button>
 
 <br><br>
@@ -34,9 +36,6 @@
                 <td>${user.passwordHash}</td>
             </tr>
         </#list>
-
 </table>
-<br>
-<input type="button" value="Перезагрузить страницу" onClick="window.location.reload()">
 </body>
 </html>

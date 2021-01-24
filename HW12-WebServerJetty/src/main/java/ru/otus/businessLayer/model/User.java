@@ -21,16 +21,16 @@ public class User {
     public User() {
     }
 
-    public User(String login, String name, int passwordHash, char isAnAdministrator) {
-        this.login = login;
+    public User(String name, String login, int passwordHash, char isAnAdministrator) {
         this.name = name;
+        this.login = login;
         this.passwordHash = passwordHash;
         this.isAnAdministrator = isAnAdministrator;
     }
 
-    public User(String login, String name, int passwordHash) {
-        this.login = login;
+    public User(String name, String login, int passwordHash) {
         this.name = name;
+        this.login = login;
         this.passwordHash = passwordHash;
     }
 

@@ -1,18 +1,18 @@
 package ru.otus.servlet;
 
 import com.google.gson.Gson;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import ru.otus.businessLayer.model.User;
 import ru.otus.businessLayer.service.DBServiceUser;
 
 import java.io.IOException;
 
-
 public class UsersApiServlet extends HttpServlet {
-
-    private static final int ID_PATH_PARAM_POSITION = 1;
 
     private final DBServiceUser dbServiceUser;
     private final Gson gson;
@@ -24,17 +24,18 @@ public class UsersApiServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        User user = dbServiceUser.findById(extractIdFromRequest(request)).orElse(null);
+        dbServiceUser.saveUser(getNewUserFromRequest(request));
 
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = response.getOutputStream();
-//        out.print(gson.toJson(user));
+        out.print("User добавлен");
+
     }
 
-    private long extractIdFromRequest(HttpServletRequest request) {
+    private User getNewUserFromRequest(HttpServletRequest request) {
         String[] path = request.getPathInfo().split("/");
-        String id = (path.length > 1)? path[ID_PATH_PARAM_POSITION]: String.valueOf(- 1);
-        return Long.parseLong(id);
+        String[] nameLoginPassword = path[1].split("&");
+        return new User(nameLoginPassword[0],nameLoginPassword[1],nameLoginPassword[2].hashCode());
     }
 
 }
