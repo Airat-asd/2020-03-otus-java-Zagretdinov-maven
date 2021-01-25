@@ -1,7 +1,5 @@
 package ru.otus;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
@@ -31,21 +29,18 @@ public class MainClassWebServer {
 
     public static void main(String[] args) throws Exception {
         DBServiceUser dbServiceUser = createDBServiceUser();
-//        dbServiceUser.saveUser(new User("Administrator", "Администратор", "asdasdassdsdsdds34534534fsd".hashCode(), 'y'));
-//        dbServiceUser.saveUser(new User("Vasia", "Василий", "asdasdas".hashCode()));
-//        dbServiceUser.saveUser(new User("Petia", "Пётр", "asdasdas".hashCode()));
-//        dbServiceUser.saveUser(new User("Kolia", "Николай", "asdasdas".hashCode()));
+//        dbServiceUser.saveUser(new User("Администратор", "Administrator", "asdasdassdsdsdds34534534fsd".hashCode(), 'y'));
+//        dbServiceUser.saveUser(new User("Василий", "Vasia", "asdasdas".hashCode()));
+//        dbServiceUser.saveUser(new User("Пётр", "Petia", "asdasdas".hashCode()));
+//        dbServiceUser.saveUser(new User("Николай", "Kolia", "asdasdas".hashCode()));
 //        Optional<User> administrator = dbServiceUser.getUser("Administrator");
 //        logger.info("user = {}", administrator.orElse(null));
-//        Optional<User> vasia = dbServiceUser.getUser("Vasia");
-//        logger.info("user = {}", vasia.orElse(null));
 
-        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService authService = new UserAuthServiceImpl(dbServiceUser);
 
         UsersWebServer usersWebServer = new UsersWebServerWithFilterBasedSecurity(WEB_SERVER_PORT,
-                authService, dbServiceUser, gson, templateProcessor);
+                authService, dbServiceUser, templateProcessor);
 
         usersWebServer.start();
         usersWebServer.join();
