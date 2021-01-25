@@ -16,6 +16,10 @@ import java.util.Optional;
 public class UserDaoHibernate implements UserDao {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
     private final SessionManagerHibernate sessionManager;
+    private final String MESSAGE_USER_ADDED = "Пользователь добавлен";
+    private final String MESSAGE_USER_NOT_ADDED = "Пользователь с таким логином уже существует!";
+    private final String EXCEPTION = "Добавить пользователя не удалось, обратитесь к администратору сайта.";
+
 
     public UserDaoHibernate(SessionManagerHibernate sessionManager) {
         this.sessionManager = sessionManager;
@@ -36,7 +40,9 @@ public class UserDaoHibernate implements UserDao {
     public Optional<List<User>> getAllUsers() {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try {
-            return Optional.ofNullable(currentSession.getHibernateSession().createQuery("From User").list());
+            Session hibernateSession = currentSession.getHibernateSession();
+            Optional<List<User>> optionalListOfUsers = Optional.ofNullable(hibernateSession.createQuery("From User").list());
+            return optionalListOfUsers;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
@@ -44,20 +50,21 @@ public class UserDaoHibernate implements UserDao {
     }
 
     @Override
-    public void insert(User user) {
+    public String insert(User user) {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
+        String message;
         try {
-            if ( ! (user.getName().isEmpty())) {
-                Session hibernateSession = currentSession.getHibernateSession();
-                hibernateSession.persist(user);
-                hibernateSession.flush();
-            } else {
-                throw new DaoException(new Exception("Имя не может быть пустым."));
-            }
+            Session hibernateSession = currentSession.getHibernateSession();
+            hibernateSession.persist(user);
+            hibernateSession.flush();
+            message = MESSAGE_USER_ADDED;
         } catch (Exception e) {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            throw new DaoException(e);
+            logger.error(e.getMessage(), e);
+            if (e.getMessage().equals("org.hibernate.exception.ConstraintViolationException: could not execute statement")) {
+                message = MESSAGE_USER_NOT_ADDED;
+            } else message = EXCEPTION;
         }
+        return message;
     }
 
     @Override
@@ -67,6 +74,7 @@ public class UserDaoHibernate implements UserDao {
             Session hibernateSession = currentSession.getHibernateSession();
             hibernateSession.merge(user);
         } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             throw new DaoException(e);
         }
     }
