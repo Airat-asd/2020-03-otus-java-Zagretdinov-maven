@@ -1,6 +1,5 @@
 package ru.otus.servlet;
 
-
 import ru.otus.businessLayer.service.DBServiceUser;
 import ru.otus.services.TemplateProcessor;
 
@@ -10,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class UsersServlet extends HttpServlet {
 
@@ -33,5 +31,4 @@ public class UsersServlet extends HttpServlet {
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, paramsMap));
     }
-
 }
