@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public class DBServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
+    private final String LOGIN_NOT_EMPTY = "Все записи должны быть заполнены!";
+
 
     private final UserDao userDao;
 
@@ -18,19 +20,26 @@ public class DBServiceUserImpl implements DBServiceUser {
     }
 
     @Override
-    public void saveUser(User user) {
-        try (var sessionManager = userDao.getSessionManager()) {
-            sessionManager.beginSession();
-            try {
-                userDao.insert(user);
-                sessionManager.commitSession();
-                logger.info("save {}, id: {}", user.getClass().getSimpleName(), user.getLogin());
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-                sessionManager.rollbackSession();
-                throw new DbServiceException(e);
+    public String saveUser(User user) {
+        String message;
+        if (!(user.getName().isEmpty())) {
+            try (var sessionManager = userDao.getSessionManager()) {
+                sessionManager.beginSession();
+                try {
+                    message = userDao.insert(user);
+                    sessionManager.commitSession();
+
+                    logger.info("save {}, id: {}", user.getClass().getSimpleName(), user.getLogin());
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    sessionManager.rollbackSession();
+                    throw new DbServiceException(e);
+                }
             }
+        } else {
+            message = LOGIN_NOT_EMPTY;
         }
+        return message;
     }
 
     @Override
