@@ -1,9 +1,7 @@
--- Для @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-create table tUsers
+create table TUSERS
 (
-    login varchar(50) not null primary key,
-    name varchar(50) not null,
-    passwordHash integer,
-    isAnAdministrator char(1)
+  login             VARCHAR2(50) not null,
+  name              VARCHAR2(50) not null,
+  passwordhash      INTEGER,
+  isanadministrator CHAR(1) default 'n'
 );
