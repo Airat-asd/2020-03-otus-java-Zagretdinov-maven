@@ -4,10 +4,8 @@ import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AppComponentsContainerImpl implements AppComponentsContainer {
@@ -21,29 +19,41 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private void processConfig(Class<?> configClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         checkConfigClass(configClass);
-        Constructor<?> constructor = configClass.getDeclaredConstructor();
-        Object applicationConfig = constructor.newInstance();
 
-        Method[] declaredMethods = configClass.getDeclaredMethods();
+        Method[] declaredMethods = configClass.getDeclaredMethods(); //Методы
 
-        Object invoke = declaredMethods[0].invoke(applicationConfig);
-        System.out.println("!!!!!!!!!!!!" + invoke);
-
-        System.out.println(Arrays.toString(declaredMethods));
-        //Список возвращаемых интерфейсов
-        List<Type> collect = Arrays.stream(declaredMethods)
+        List<Method> methods = Arrays.stream(declaredMethods)
                 .filter(method -> method.isAnnotationPresent(AppComponent.class))
-                .map(method -> method.getGenericReturnType())
+                .sorted(Comparator.comparingInt(method -> method.getAnnotation(AppComponent.class).order()))
                 .collect(Collectors.toList());
-        System.out.println(collect);
 
-        //Список возвращаемых интерфейсов
-        List<Type> collect1 = Arrays.stream(declaredMethods)
-                .filter(method -> method.isAnnotationPresent(AppComponent.class))
-                .map(method -> method.getReturnType())
-                .collect(Collectors.toList());
-        System.out.println(collect1);
+        Constructor<?> constructor = configClass.getDeclaredConstructor(); //конструктор
+        Object instanceConfigClass = constructor.newInstance(); // инстанс класса
 
+        for (Method method : methods) {
+            Object instance;
+            List<Object> listParametersMethod = new ArrayList<>();
+            Type[] parameterMethod = method.getGenericParameterTypes();
+
+            if (parameterMethod.length == 0) {
+                instance = method.invoke(instanceConfigClass);
+                appComponents.add(instance);
+                appComponentsByName.put(getNameClass(method), instance);
+            } else {
+                for (Type parameters : parameterMethod) {
+                    Object parameter = appComponentsByName.get(parameters.toString().split(" ")[1]);
+                    if (parameter != null) {
+                        listParametersMethod.add(parameter);
+                    } else throw new RuntimeException(String.format("Класс \"%s\" не найден", parameters.toString()));
+                }
+                Object[] arrayParametersMethod = listParametersMethod.toArray();
+                instance = method.invoke(instanceConfigClass, arrayParametersMethod);
+                appComponents.add(instance);
+                appComponentsByName.put(getNameClass(method), instance);
+            }
+        }
+        System.out.println(appComponentsByName);
+        System.out.println(appComponents);
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -55,14 +65,37 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
 
+        String nameClass = componentClass.toString().split(" ")[1];
+        C returnClazz = (C) appComponentsByName.get(nameClass);
+        System.out.println("CLASS=" + nameClass);
+        if (returnClazz == null) {
+            for (Object instance : appComponents) {
+                if (nameClass.equals(getNameInstance(instance))) {
+                    returnClazz = (C) instance;
+                }
+                System.out.println(getNameInstance(instance));
+            }
 
-        return null;
+        }
+        if (returnClazz == null) {
+            throw new RuntimeException(String.format("Класс \"%s\" не найден", componentClass.toString()));
+        } else return returnClazz;
     }
 
     @Override
     public <C> C getAppComponent(String componentName) {
+        C clazz = (C) appComponentsByName.get(componentName);
+        if (clazz == null) {
+            throw new RuntimeException(String.format("Класс \"%s\" не найден", componentName));
+        } else return clazz;
+    }
 
+    private String getNameClass(Method method) {
+        return method.getReturnType().toString().split(" ")[1];
+    }
 
-        return null;
+    private String getNameInstance(Object object) {
+        String name = object.getClass().toString().split(" ")[1];
+        return name;
     }
 }
