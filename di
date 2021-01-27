@@ -52,8 +52,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 appComponentsByName.put(getNameClass(method), instance);
             }
         }
-        System.out.println(appComponentsByName);
-        System.out.println(appComponents);
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -64,7 +62,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
-
         String nameClass = componentClass.toString().split(" ")[1];
         C returnClazz = (C) appComponentsByName.get(nameClass);
         System.out.println("CLASS=" + nameClass);
@@ -73,9 +70,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 if (nameClass.equals(getNameInstance(instance))) {
                     returnClazz = (C) instance;
                 }
-                System.out.println(getNameInstance(instance));
             }
-
         }
         if (returnClazz == null) {
             throw new RuntimeException(String.format("Класс \"%s\" не найден", componentClass.toString()));
@@ -83,11 +78,10 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     @Override
-    public <C> C getAppComponent(String componentName) {
+    public <C> C getAppComponent(String componentName) throws ClassNotFoundException {
+        Class<?> aClass =  Class.forName(componentName);
         C clazz = (C) appComponentsByName.get(componentName);
-        if (clazz == null) {
-            throw new RuntimeException(String.format("Класс \"%s\" не найден", componentName));
-        } else return clazz;
+        return clazz;
     }
 
     private String getNameClass(Method method) {
