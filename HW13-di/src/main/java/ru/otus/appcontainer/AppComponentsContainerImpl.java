@@ -3,7 +3,9 @@ package ru.otus.appcontainer;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
+import ru.otus.services.GameProcessor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +14,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
+    private final Map<String, Object> classComponentsByNameAnnotation = new HashMap<>();
 
     public AppComponentsContainerImpl(Class<?> initialConfigClass) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         processConfig(initialConfigClass);
@@ -39,6 +42,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 instance = method.invoke(instanceConfigClass);
                 appComponents.add(instance);
                 appComponentsByName.put(getNameClass(method), instance);
+                classComponentsByNameAnnotation.put(method.getAnnotation(AppComponent.class).name(),instance);
             } else {
                 for (Type parameters : parameterMethod) {
                     Object parameter = appComponentsByName.get(parameters.toString().split(" ")[1]);
@@ -50,6 +54,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 instance = method.invoke(instanceConfigClass, arrayParametersMethod);
                 appComponents.add(instance);
                 appComponentsByName.put(getNameClass(method), instance);
+                classComponentsByNameAnnotation.put(method.getAnnotation(AppComponent.class).name(),instance);
             }
         }
     }
@@ -64,7 +69,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     public <C> C getAppComponent(Class<C> componentClass) {
         String nameClass = componentClass.toString().split(" ")[1];
         C returnClazz = (C) appComponentsByName.get(nameClass);
-        System.out.println("CLASS=" + nameClass);
         if (returnClazz == null) {
             for (Object instance : appComponents) {
                 if (nameClass.equals(getNameInstance(instance))) {
@@ -78,10 +82,11 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     @Override
-    public <C> C getAppComponent(String componentName) throws ClassNotFoundException {
-        Class<?> aClass =  Class.forName(componentName);
-        C clazz = (C) appComponentsByName.get(componentName);
-        return clazz;
+    public <C> C getAppComponent(String componentName) {
+        C returnClazz = (C) classComponentsByNameAnnotation.get(componentName);
+        if (returnClazz == null) {
+            throw new RuntimeException(String.format("Класс \"%s\" не найден", componentName));
+        } else return returnClazz;
     }
 
     private String getNameClass(Method method) {
