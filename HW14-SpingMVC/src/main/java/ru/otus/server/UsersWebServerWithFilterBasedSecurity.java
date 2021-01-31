@@ -1,6 +1,5 @@
 package ru.otus.server;
 
-import com.google.gson.Gson;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -17,7 +16,6 @@ import ru.otus.servlet.LoginServlet;
 import ru.otus.servlet.UsersApiServlet;
 import ru.otus.servlet.UsersServlet;
 
-import javax.servlet.Filter;
 import java.util.Arrays;
 
 public class UsersWebServerWithFilterBasedSecurity implements UsersWebServer {
@@ -25,7 +23,6 @@ public class UsersWebServerWithFilterBasedSecurity implements UsersWebServer {
     private static final String COMMON_RESOURCES_DIR = "static";
 
     private final DBServiceUser dbServiceUser;
-    private final Gson gson;
     protected final TemplateProcessor templateProcessor;
     private final Server server;
     private final UserAuthService authService;
@@ -33,10 +30,8 @@ public class UsersWebServerWithFilterBasedSecurity implements UsersWebServer {
     public UsersWebServerWithFilterBasedSecurity(int port,
                                                  UserAuthService authService,
                                                  DBServiceUser dbServiceUser,
-                                                 Gson gson,
                                                  TemplateProcessor templateProcessor) {
         this.dbServiceUser = dbServiceUser;
-        this.gson = gson;
         this.templateProcessor = templateProcessor;
         server = new Server(port);
         this.authService = authService;
@@ -92,7 +87,7 @@ public class UsersWebServerWithFilterBasedSecurity implements UsersWebServer {
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser, gson)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser)), "/api/user/*");
         return servletContextHandler;
     }
 }

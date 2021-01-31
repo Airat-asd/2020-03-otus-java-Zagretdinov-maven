@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    void insert(User user);
+    String insert(User user);
 
     void update(User user);
 
