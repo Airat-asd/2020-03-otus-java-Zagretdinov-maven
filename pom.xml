@@ -16,6 +16,7 @@
 
     <modules>
         <module>HW12-webServerJetty</module>
+        <module>HW14-SpingMVC</module>
     </modules>
 
     <properties>
