@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DBServiceUser {
 
-    void saveUser(User user);
+    String saveUser(User user);
 
     Optional<User> getUser(String name);
 

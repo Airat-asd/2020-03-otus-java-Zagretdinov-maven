@@ -2,8 +2,6 @@ package ru.otus;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.otus.businessLayer.model.User;
 import ru.otus.businessLayer.service.DBServiceUser;
 import ru.otus.businessLayer.service.DBServiceUserImpl;
@@ -18,10 +16,8 @@ import ru.otus.services.TemplateProcessorImpl;
 import ru.otus.services.UserAuthService;
 import ru.otus.services.UserAuthServiceImpl;
 
-import java.util.Optional;
 
 public class MainClassWebServer {
-    private static final Logger logger = LoggerFactory.getLogger(MainClassWebServer.class);
     private static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
 
     private static final int WEB_SERVER_PORT = 8090;
@@ -29,12 +25,6 @@ public class MainClassWebServer {
 
     public static void main(String[] args) throws Exception {
         DBServiceUser dbServiceUser = createDBServiceUser();
-//        dbServiceUser.saveUser(new User("Администратор", "Administrator", "asdasdassdsdsdds34534534fsd".hashCode(), 'y'));
-//        dbServiceUser.saveUser(new User("Василий", "Vasia", "asdasdas".hashCode()));
-//        dbServiceUser.saveUser(new User("Пётр", "Petia", "asdasdas".hashCode()));
-//        dbServiceUser.saveUser(new User("Николай", "Kolia", "asdasdas".hashCode()));
-//        Optional<User> administrator = dbServiceUser.getUser("Administrator");
-//        logger.info("user = {}", administrator.orElse(null));
 
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
         UserAuthService authService = new UserAuthServiceImpl(dbServiceUser);
@@ -48,15 +38,6 @@ public class MainClassWebServer {
 
     public static DBServiceUser createDBServiceUser() {
         Configuration configuration = new Configuration().configure(HIBERNATE_CFG_FILE);
-
-//        String dbUrl = configuration.getProperty("hibernate.connection.url");
-//        String dbUserName = configuration.getProperty("hibernate.connection.username");
-//        String dbPassword = configuration.getProperty("hibernate.connection.password");
-//
-//        MigrationsExecutorFlyway flyway =
-//                new MigrationsExecutorFlyway(dbUrl, dbUserName, dbPassword);
-//        flyway.cleanDb();
-//        flyway.executeMigrations();
 
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory(configuration, User.class);
 
