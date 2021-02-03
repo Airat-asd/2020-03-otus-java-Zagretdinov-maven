@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all clients</title>
+    <title>List of all users</title>
 
     <script>
         function getClient(url, valueControlName) {
@@ -20,7 +20,7 @@
             padding: 50px;
         }
 
-        .clients, .clients td {
+        .users, .users td {
             border: 1px solid lightgray;
             padding: 5px;
             margin-bottom: 10px;
@@ -67,9 +67,9 @@
     </style>
 </head>
 <body>
-    <h3>Клиенты:</h3>
+    <h3>Пользователи:</h3>
 
-    <table class="clients">
+    <table class="users">
         <thead>
             <tr>
                 <th>ID</th>
@@ -77,52 +77,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="client : ${clients}">
-                <td th:text="${client.id}">1</td>
-                <td th:text="${client.name}">John Doe</td>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}">1</td>
+                <td th:text="${user.name}">John Doe</td>
             </tr>
         </tbody>
     </table>
-    <a th:href="@{/client/create}" href="clientCreate.html">New client</a>
+    <a th:href="@{/user/create}" href="userCreate.html">New client</a>
 
     <br/><br/>
     <h3>Тест View без контроллера:</h3>
     <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
-
-
-    <br/><br/>
-    <h3>API:</h3>
-
-
-    <a th:href="@{/api/client?name=%D0%94%D0%B6%D0%B0%D0%BD%D0%B5%D1%82%20%D0%92%D1%8D%D1%80%D0%BD%D0%B8}">
-        Запрос клиента по имени Джанет Вэрни
-    </a>
-    <a th:href="@{/api/client/2}">Запрос клиента с id = 2</a>
-    <a th:href="@{/api/client/random}">Запрос случайного клиента</a>
-    <br/>
-    <br/>
-
-    <div class="controls-container">
-        <input type="text" id = "clientIdTextBox" value="3" placeholder="Введите id клиента" >
-        <button onclick="getClient('api/client/', 'clientIdTextBox')">Получить клиента по id</button>
-    </div>
-    <div class="controls-container">
-        <select id="clientsNamesSelect">
-            <option value="Крис Гир">Крис Гир</option>
-            <option value="Ая Кэш" selected>Ая Кэш</option>
-            <option value="Десмин Боргес">Десмин Боргес</option>
-            <option value="Кетер Донохью">Кетер Донохью</option>
-            <option value="Стивен Шнайдер">Стивен Шнайдер</option>
-            <option value="Джанет Вэрни">Джанет Вэрни</option>
-            <option value="Брэндон Смит">Брэндон Смит</option>
-        </select>
-        <button onclick="getClient('api/client?name=', 'clientsNamesSelect')">Получить клиента по имени</button>
-    </div>
-    <div class="controls-container single-button-container">
-        <button onclick="getClient('api/client/random')">Получить случайного клиента</button>
-    </div>
-
-    <pre id = "clientDataContainer"></pre>
 
 </body>
 </html>
