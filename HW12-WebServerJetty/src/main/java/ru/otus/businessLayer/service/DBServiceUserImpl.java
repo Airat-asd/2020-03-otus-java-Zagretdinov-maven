@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class DBServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
-    private final String LOGIN_NOT_EMPTY = "Все записи должны быть заполнены!";
+    private static final String LOGIN_NOT_EMPTY = "Все записи должны быть заполнены!";
 
 
     private final UserDao userDao;
