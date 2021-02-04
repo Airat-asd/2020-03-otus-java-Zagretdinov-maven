@@ -18,9 +18,9 @@ import java.util.Optional;
 public class UserDaoHibernate implements UserDao {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
     private final SessionManagerHibernate sessionManager;
-    private final String MESSAGE_USER_ADDED = "Пользователь добавлен";
-    private final String MESSAGE_USER_NOT_ADDED = "Пользователь с таким логином уже существует!";
-    private final String EXCEPTION = "Добавить пользователя не удалось, обратитесь к администратору сайта.";
+    private static final String MESSAGE_USER_ADDED = "Пользователь добавлен";
+    private static final String MESSAGE_USER_NOT_ADDED = "Пользователь с таким логином уже существует!";
+    private static final String EXCEPTION = "Добавить пользователя не удалось, обратитесь к администратору сайта.";
 
 
     public UserDaoHibernate(SessionManagerHibernate sessionManager) {
