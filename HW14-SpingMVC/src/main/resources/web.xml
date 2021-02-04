@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>HW14-SpingMVC</display-name>
+    <description>HW14-SpingMVC</description>
+
+    <servlet>
+        <servlet-name>HW14-SpingMVC-Servlet</servlet-name>
+        <servlet-class>ru.otus.controllers.UserController</servlet-class>
+        <servlet-class>ru.otus.controllers.UserRestController</servlet-class>
+        <servlet-class>ru.otus.controllers.AdviceController</servlet-class>
+    </servlet>
+
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>timerServlet</servlet-name>-->
+<!--        <url-pattern>/timer</url-pattern>-->
+<!--    </servlet-mapping>-->
+
+    <welcome-file-list>
+        <welcome-file>usersList.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
