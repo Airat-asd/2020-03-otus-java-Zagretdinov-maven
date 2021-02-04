@@ -1,36 +1,29 @@
 package ru.otus.controllers;
 
 import org.springframework.web.bind.annotation.*;
-import ru.otus.domain.Client;
-import ru.otus.services.ClientService;
+import ru.otus.businessLayer.model.User;
+import ru.otus.businessLayer.service.DBServiceUser;
+
+import java.util.Optional;
 
 @RestController
 public class UserRestController {
 
-    private final ClientService clientService;
+    private final DBServiceUser dbServiceUser;
 
-    public UserRestController(ClientService clientService) {
-        this.clientService = clientService;
-    }
-
-    @GetMapping("/api/client/{id}")
-    public Client getClientById(@PathVariable(name = "id") long id) {
-        return clientService.findById(id);
+    public UserRestController(DBServiceUser dbServiceUser) {
+        this.dbServiceUser = dbServiceUser;
     }
 
     @GetMapping("/api/client")
-    public Client getClientByName(@RequestParam(name = "name") String name) {
-        return clientService.findByName(name);
+    public User getClientByName(@RequestParam(name = "name") String name) {
+        Optional<User> user = dbServiceUser.getUser(name);
+        return user.orElse(new User());
     }
 
     @PostMapping("/api/client")
-    public Client saveClient(@RequestBody Client client) {
-        return clientService.save(client);
+    public User saveClient(@RequestBody User user) {
+        dbServiceUser.saveUser(user);
+        return user;
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/api/client/random")
-    public Client findRandomClient() {
-        return clientService.findRandom();
-    }
-
 }
