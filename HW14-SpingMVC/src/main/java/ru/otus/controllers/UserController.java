@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ClientController {
+public class UserController {
 
     private final DBServiceUser dbServiceUser;
 
-    public ClientController(DBServiceUser dbServiceUser) {
+    public UserController(DBServiceUser dbServiceUser) {
         this.dbServiceUser = dbServiceUser;
     }
 

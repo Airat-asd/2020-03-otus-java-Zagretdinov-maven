@@ -2,9 +2,10 @@ package ru.otus.hibernateImplementation.sessionmanager;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Service;
 import ru.otus.daoLayer.core.sessionmanager.DatabaseSession;
 
-
+@Service
 public class DatabaseSessionHibernate implements DatabaseSession {
     private final Session session;
     private final Transaction transaction;

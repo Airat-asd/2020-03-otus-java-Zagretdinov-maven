@@ -2,12 +2,14 @@ package ru.otus.businessLayer.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.otus.businessLayer.model.User;
 import ru.otus.daoLayer.core.dao.UserDao;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DBServiceUserImpl implements DBServiceUser {
     private static final Logger logger = LoggerFactory.getLogger(DBServiceUserImpl.class);
     private final String LOGIN_NOT_EMPTY = "Все записи должны быть заполнены!";
