@@ -1,5 +1,7 @@
 package ru.otus.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Controller
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final DBServiceUser dbServiceUser;
 
@@ -24,6 +27,7 @@ public class UserController {
     @GetMapping({"/", "/user/list"})
     public String clientsListView(Model model) {
         List<User> users =  dbServiceUser.getAllUsers().orElse(new ArrayList<>());
+        logger.info("USERS  =  {}", users);
         model.addAttribute("users", users);
         return "usersList.html";
     }
