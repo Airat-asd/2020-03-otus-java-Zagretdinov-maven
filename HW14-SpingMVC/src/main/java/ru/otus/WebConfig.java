@@ -1,5 +1,11 @@
 package ru.otus;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,6 +18,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import ru.otus.businessLayer.model.User;
 
 @Configuration
 @ComponentScan
@@ -19,6 +26,11 @@ import org.thymeleaf.templatemode.TemplateMode;
 public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
+    public static final String HIBERNATE_CFG_FILE = "!hibernate.cfg-work.xml";
+    public static final String DB_URL = "jdbc:oracle:thin:@msk-ds01cpt:1521/cprt";
+    public static final String DB_USER_NAME = "mp";
+    public static final String DB_PASSWORD = "cityplus";
+    public static final Class<?> clazz = User.class;
 
     public WebConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -62,4 +74,26 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/**").addResourceLocations("/WEB-INF/static/");
     }
 
+    @Bean
+    public org.hibernate.cfg.Configuration configuration() {
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
+        configuration.setProperty("hibernate.connection.url", DB_URL);
+        configuration.setProperty("hibernate.connection.username", DB_USER_NAME);
+        configuration.setProperty("hibernate.connection.password", DB_PASSWORD);
+        return configuration;
+    }
+
+    @Bean
+    public SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
+        MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties()).build());
+        metadataSources.addAnnotatedClass(clazz);
+        Metadata metadata = metadataSources.getMetadataBuilder().build();
+        return metadata.getSessionFactoryBuilder().build();
+    }
+
+    @Bean
+    public Session session(SessionFactory sessionFactory) {
+        return sessionFactory.openSession();
+    }
 }
