@@ -26,8 +26,8 @@ public class UserController {
 
     @GetMapping({"/", "/user/list"})
     public String clientsListView(Model model) {
+        var test = dbServiceUser.getAllUsers().get();
         List<User> users =  dbServiceUser.getAllUsers().orElse(new ArrayList<>());
-        logger.info("USERS  =  {}", users);
         model.addAttribute("users", users);
         return "usersList.html";
     }
@@ -38,8 +38,9 @@ public class UserController {
         return "userCreate.html";
     }
 
-    @PostMapping("/client/save")
+    @PostMapping("/user/save")
     public RedirectView clientSave(@ModelAttribute User user) {
+        logger.info("!!!!!!!!!!!!!!!!!!!!user = {}", user);
         dbServiceUser.saveUser(user);
         return new RedirectView("/", true);
     }
