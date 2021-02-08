@@ -1,48 +1,50 @@
-package ru.otus.controllers;
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create user</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.view.RedirectView;
-import ru.otus.businessLayer.model.User;
-import ru.otus.businessLayer.service.DBServiceUser;
+        label {
+            display: inline-block;
+            width: 100px;
+        }
 
-import java.util.ArrayList;
-import java.util.List;
+        input:read-only {
+            background: lightgray;
+        }
 
-@Controller
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
 
-    private final DBServiceUser dbServiceUser;
+<form id="create-form" th:action="@{/user/save}" th:object="${dtoUser}" th:method="post" accept-charset="utf-8">
+    <h1>New User:</h1>
 
-    public UserController(DBServiceUser dbServiceUser) {
-        this.dbServiceUser = dbServiceUser;
-    }
+    <div class="row">
+        <label for="holder-inputName">Name</label>
+        <br>
+        <input id="holder-inputName" name="name" type="text" th:value="${dtoUser.name}" value="Name"/>
+        <br><br>
+        <label for="holder-inputLogin">Login</label>
+        <br>
+        <input id="holder-inputLogin" name="login" type="text" th:value="${dtoUser.login}" value="Login"/>
+        <br><br>
+        <label for="holder-inputPassword">Password</label>
+        <br>
+        <input id="holder-inputPassword" name="Password" type="text" th:value="${dtoUser.password}" value="Password"/>
+    </div>
 
-    @GetMapping({"/", "/user/list"})
-    public String clientsListView(Model model) {
-        var test = dbServiceUser.getAllUsers().get();
-        List<User> users =  dbServiceUser.getAllUsers().orElse(new ArrayList<>());
-        model.addAttribute("users", users);
-        return "usersList.html";
-    }
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
 
-    @GetMapping("/user/create")
-    public String clientCreateView(Model model) {
-        model.addAttribute("user", new User());
-        return "userCreate.html";
-    }
-
-    @PostMapping("/user/save")
-    public RedirectView clientSave(@ModelAttribute User user) {
-        logger.info("!!!!!!!!!!!!!!!!!!!!user = {}", user);
-        dbServiceUser.saveUser(user);
-        return new RedirectView("/", true);
-    }
-
-}
+</body>
+</html>
