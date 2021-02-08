@@ -1,48 +1,76 @@
-package ru.otus.controllers;
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all users</title>
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.view.RedirectView;
-import ru.otus.businessLayer.model.User;
-import ru.otus.businessLayer.service.DBServiceUser;
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
 
-import java.util.ArrayList;
-import java.util.List;
+        .DtoUsers td {
+            border: 1px solid lightgray;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
 
-@Controller
-public class UserController {
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+        a {
+            display: block;
+        }
 
-    private final DBServiceUser dbServiceUser;
+        input {
+            width: 150px;
+        }
 
-    public UserController(DBServiceUser dbServiceUser) {
-        this.dbServiceUser = dbServiceUser;
-    }
 
-    @GetMapping({"/", "/user/list"})
-    public String clientsListView(Model model) {
-        var test = dbServiceUser.getAllUsers().get();
-        List<User> users =  dbServiceUser.getAllUsers().orElse(new ArrayList<>());
-        model.addAttribute("users", users);
-        return "usersList.html";
-    }
+        select {
+            width: 154px;
+        }
 
-    @GetMapping("/user/create")
-    public String clientCreateView(Model model) {
-        model.addAttribute("user", new User());
-        return "userCreate.html";
-    }
+        button {
+            width: 250px;
+        }
 
-    @PostMapping("/user/save")
-    public RedirectView clientSave(@ModelAttribute User user) {
-        logger.info("!!!!!!!!!!!!!!!!!!!!user = {}", user);
-        dbServiceUser.saveUser(user);
-        return new RedirectView("/", true);
-    }
+        h3 {
+            background: url("../static/listmark.png") no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
 
-}
+    <style th:inline="text">
+        h3 {
+            background: url([[@{/static/listmark.png}]]) no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<h3>Пользователи:</h3>
+
+<table class="DtoUsers">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Login</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dtoUser : ${dtoUsers}">
+        <td th:text="${dtoUser.name}">1</td>
+        <td th:text="${dtoUser.login}">John Doe</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+
+<a th:href="@{/user/create}" href="userCreate.html">New user</a>
+<br>
+
+<h3>Тест View без контроллера:</h3>
+<a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+
+</body>
+</html>
