@@ -1,24 +1,59 @@
-package ru.otus.businessLayer.service;
+package ru.otus.businessLayer.dto;
 
-import org.springframework.stereotype.Service;
-import ru.otus.businessLayer.dto.SaveUser;
-import ru.otus.businessLayer.model.User;
+public class DtoUser {
+    private String login;
 
-@Service
-public class MappingUserToDto {
+    private String name;
 
-    public SaveUser mapToSaveUser(User user) {
-        SaveUser saveUser = new SaveUser();
-        saveUser.setName(user.getName());
-        saveUser.setLogin(user.getLogin());
-        return saveUser;
+    private String password;
+
+    private char isAnAdministrator = 'n';
+
+    public DtoUser() {
     }
 
-    public User mapToUser(SaveUser saveUser) {
-        User user = new User();
-        user.setName(saveUser.getName());
-        user.setLogin(saveUser.getName());
-        user.setPasswordHash(saveUser.getPassword().hashCode());
-        return user;
+    public DtoUser(String login, String name, String password) {
+        this.login = login;
+        this.name = name;
+        this.password = password;
+    }
+
+    public DtoUser(String login, String name, String password, char isAnAdministrator) {
+        this.login = login;
+        this.name = name;
+        this.password = password;
+        this.isAnAdministrator = isAnAdministrator;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public char getIsAnAdministrator() {
+        return isAnAdministrator;
+    }
+
+    public void setIsAnAdministrator(char isAnAdministrator) {
+        this.isAnAdministrator = isAnAdministrator;
     }
 }
