@@ -75,10 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public org.hibernate.cfg.Configuration configuration() {
-        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
-        configuration.setProperty("hibernate.connection.url", DB_URL);
-        configuration.setProperty("hibernate.connection.username", DB_USER_NAME);
-        configuration.setProperty("hibernate.connection.password", DB_PASSWORD);
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);        
         return configuration;
     }
 
