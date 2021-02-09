@@ -26,9 +26,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
     public static final String HIBERNATE_CFG_FILE = "!hibernate.cfg-work.xml";
-    public static final String DB_URL = "jdbc:oracle:thin:@msk-ds01cpt:1521/cprt";
-    public static final String DB_USER_NAME = "mp";
-    public static final String DB_PASSWORD = "cityplus";
     public static final Class<?> clazz = User.class;
 
     public WebConfig(ApplicationContext applicationContext) {
