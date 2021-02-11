@@ -3,7 +3,7 @@ package ru.otus.hibernateImplementation.dao;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import ru.otus.businessLayer.model.User;
 import ru.otus.daoLayer.core.dao.DaoException;
 import ru.otus.daoLayer.core.dao.UserDao;
@@ -14,14 +14,13 @@ import ru.otus.hibernateImplementation.sessionmanager.SessionManagerHibernate;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Repository
 public class UserDaoHibernate implements UserDao {
     private static final Logger logger = LoggerFactory.getLogger(UserDaoHibernate.class);
     private final SessionManagerHibernate sessionManager;
     private static final String MESSAGE_USER_ADDED = "Пользователь добавлен";
     private static final String MESSAGE_USER_NOT_ADDED = "Пользователь с таким логином уже существует!";
     private static final String EXCEPTION = "Добавить пользователя не удалось, обратитесь к администратору сайта.";
-
 
     public UserDaoHibernate(SessionManagerHibernate sessionManager) {
         this.sessionManager = sessionManager;
@@ -43,7 +42,8 @@ public class UserDaoHibernate implements UserDao {
         DatabaseSessionHibernate currentSession = sessionManager.getCurrentSession();
         try {
             Session hibernateSession = currentSession.getHibernateSession();
-            Optional<List<User>> optionalListOfUsers = Optional.ofNullable(hibernateSession.createQuery("From User").list());
+            List<User> users = hibernateSession.createQuery("From User").list();
+            Optional<List<User>> optionalListOfUsers = Optional.ofNullable(users);
             return optionalListOfUsers;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
