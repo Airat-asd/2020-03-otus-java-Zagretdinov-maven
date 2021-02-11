@@ -25,11 +25,32 @@ import ru.otus.businessLayer.model.User;
 public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
-    public static final String HIBERNATE_CFG_FILE = "!hibernate.cfg-work.xml";
-    public static final Class<?> clazz = User.class;
 
     public WebConfig(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+    }
+
+    public static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
+    public static final Class<?> clazz = User.class;
+
+    @Bean
+    public org.hibernate.cfg.Configuration configuration() {
+        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);
+        return configuration;
+    }
+
+    @Bean
+    public SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
+        MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties()).build());
+        metadataSources.addAnnotatedClass(clazz);
+        Metadata metadata = metadataSources.getMetadataBuilder().build();
+        return metadata.getSessionFactoryBuilder().build();
+    }
+
+    @Bean
+    public Session session(SessionFactory sessionFactory) {
+        return sessionFactory.openSession();
     }
 
     @Bean
@@ -68,25 +89,5 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/WEB-INF/static/");
-    }
-
-    @Bean
-    public org.hibernate.cfg.Configuration configuration() {
-        org.hibernate.cfg.Configuration configuration = new org.hibernate.cfg.Configuration().configure(HIBERNATE_CFG_FILE);        
-        return configuration;
-    }
-
-    @Bean
-    public SessionFactory sessionFactory(org.hibernate.cfg.Configuration configuration) {
-        MetadataSources metadataSources = new MetadataSources(new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties()).build());
-        metadataSources.addAnnotatedClass(clazz);
-        Metadata metadata = metadataSources.getMetadataBuilder().build();
-        return metadata.getSessionFactoryBuilder().build();
-    }
-
-    @Bean
-    public Session session(SessionFactory sessionFactory) {
-        return sessionFactory.openSession();
     }
 }
