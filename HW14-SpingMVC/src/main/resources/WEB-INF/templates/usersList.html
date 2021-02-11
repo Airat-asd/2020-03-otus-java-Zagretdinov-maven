@@ -4,6 +4,17 @@
     <meta charset="UTF-8"/>
     <title>List of all users</title>
 
+    <script>
+        function getUser(url, valueControlLogin) {
+            const valueControl = document.getElementById(valueControlLogin);
+            const userDataContainer = document.getElementById('userDataContainer');
+            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
+            fetch(fullUrl)
+                .then(response => response.json())
+                .then(client => userDataContainer.innerHTML = JSON.stringify(client));
+        }
+    </script>
+
     <style type="text/css">
         body {
             padding: 50px;
@@ -29,13 +40,22 @@
         }
 
         button {
-            width: 250px;
+            width: 200px;
         }
 
         h3 {
             background: url("../static/listmark.png") no-repeat;
             padding: 2px;
             padding-left: 30px;
+        }
+
+        controls-container {
+            width: 200px;
+        }
+
+        label {
+            display: inline-block;
+            width: 50px;
         }
     </style>
 
@@ -46,31 +66,42 @@
             padding-left: 30px;
         }
     </style>
+
 </head>
 <body>
-<h3>Пользователи:</h3>
+    <h3>Пользователи:</h3>
 
-<table class="DtoUsers">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Login</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="dtoUser : ${dtoUsers}">
-        <td th:text="${dtoUser.name}">1</td>
-        <td th:text="${dtoUser.login}">John Doe</td>
-    </tr>
-    </tbody>
-</table>
-<br>
+    <table class="DtoUsers">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Login</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dtoUser : ${dtoUsers}">
+            <td th:text="${dtoUser.name}">1</td>
+            <td th:text="${dtoUser.login}">John Doe</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
 
-<a th:href="@{/user/create}" href="userCreate.html">New user</a>
-<br>
+    <a th:href="@{/user/create}" href="userCreate.html">New user</a>
+    <br>
 
-<h3>Тест View без контроллера:</h3>
-<a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+    <h3>Тест View без контроллера:</h3>
+    <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+    <br>
+
+    <h3>Найти пользователя по логину:</h3>
+
+    <div class="controls-container">
+        <input type="text" id = "userLoginTextBox" value="login" placeholder="Введите login пользователя" >
+        <button onclick="getUser('api/user/', 'userLoginTextBox')">Получить пользователя по login</button>
+    </div>
+
+    <pre id = "userDataContainer"></pre>
 
 </body>
 </html>
