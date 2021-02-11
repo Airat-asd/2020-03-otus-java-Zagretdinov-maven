@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping("/user/save")
     public RedirectView clientSave(@ModelAttribute DtoUser dtoUser) {
-        dbServiceUser.saveUser(MappingUserToDto.mapToUser(dtoUser));
+        String s = dbServiceUser.saveUser(MappingUserToDto.mapToUser(dtoUser));
         return new RedirectView("/", true);
     }
 }
