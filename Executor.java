@@ -16,41 +16,42 @@ public class Main {
 
     private int sharedCounter = 0;
 
+    private final Pool pool = new Pool();
+
     public static void main(String[] args) {
         new Main().go();
     }
 
     private void go() {
-        new Thread(this::writer, "writer-1").start();
-        new Thread(this::writer, "writer-2").start();
+
+        new Thread(() -> writer(false), "writer-1").start();
+        new Thread(() -> writer(true), "writer-2").start();
     }
 
-    private void writer() {
+    private void writer(boolean even) {
         while (!Thread.currentThread().isInterrupted()) {
             lock.writeLock().lock();
             try {
-
-                if ((this.sharedCounter % 2) != 0) {
-                    logger.info("{}", sharedCounter);
+                int i;
+                if (this.sharedCounter < 10) {
+                    i = 1;
+                } else {
+                    i = -1;
                 }
-                this.sharedCounter++;
+                this.sharedCounter = this.sharedCounter + i;
+                if ((this.sharedCounter % 2) == 0) {
+                    if (even) {
+                        logger.info("{}", sharedCounter);
+                    }
+                } else {
+                    if (!even) {
+                        logger.info("{}", sharedCounter);
+                    }
 
-                logger.info("write:{}", sharedCounter);
+                }
+                sleep(1);
             } finally {
                 lock.writeLock().unlock();
-            }
-            sleep(2);
-        }
-    }
-
-    private void reader() {
-        while (!Thread.currentThread().isInterrupted()) {
-            // logger.info("before lock");
-            lock.readLock().lock();
-            try {
-                logger.info("read:{}", this.sharedCounter);
-            } finally {
-                lock.readLock().unlock();
             }
         }
     }
@@ -62,4 +63,10 @@ public class Main {
             Thread.currentThread().interrupt();
         }
     }
+
+}
+
+class Pool {
+    boolean state = false;
+    int count = 0;
 }
