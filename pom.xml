@@ -16,6 +16,7 @@
 
     <modules>
         <module>HW14-SpingMVC</module>
+        <module>HW15-Executor</module>
     </modules>
 
     <properties>
