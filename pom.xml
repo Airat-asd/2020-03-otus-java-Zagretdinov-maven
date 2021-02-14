@@ -18,6 +18,7 @@
         <module>HW12-webServerJetty</module>
         <module>HW13-di</module>
         <module>HW15-Executor</module>
+        <module>HW15-MessageSystem</module>
     </modules>
 
     <properties>
