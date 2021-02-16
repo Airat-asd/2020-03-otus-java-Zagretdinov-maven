@@ -3,8 +3,6 @@ package ru.otus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -25,14 +23,12 @@ public class First {
     }
 
     private void go() {
-        List<Integer> countThread1 = new ArrayList<>();
-        List<Integer> countThread2 = new ArrayList<>();
 
-        new Thread(() -> writer(false, countThread1), "writer-1").start();
-        new Thread(() -> writer(true, countThread2), "writer-2").start();
+        new Thread(() -> writer(false), "writer-1").start();
+        new Thread(() -> writer(true), "writer-2").start();
     }
 
-    private void writer(boolean even, List<Integer> countThread) {
+    private void writer(boolean even) {
         while (!Thread.currentThread().isInterrupted()) {
             lock.writeLock().lock();
             try {
@@ -44,13 +40,12 @@ public class First {
                         i = -1;
                     }
                     this.sharedCounter = this.sharedCounter + i;
-                    countThread.add(this.sharedCounter);
                     if (this.sharedCounter == 10) {
                         direction = false;
                     } else if (this.sharedCounter == 1) {
                         direction = true;
                     }
-                    logger.info("{}", countThread);
+                    logger.info("{}", this.sharedCounter);
                     last = !even;
                     sleep(1);
                 }
