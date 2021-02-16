@@ -25,7 +25,7 @@ public class UserController {
 
     @GetMapping({"/", "/user/list"})
     public String clientsListView(Model model) {
-        List<User> users =  dbServiceUser.getAllUsers().orElse(new ArrayList<>());
+        List<User> users =  dbServiceUser.getAllUsers();
         List<DtoUser> dtoUsers = new ArrayList<>(users.size());
         users.forEach(user -> dtoUsers.add(MappingUserToDto.mapToDtoUser(user)));
         model.addAttribute("dtoUsers", dtoUsers);
