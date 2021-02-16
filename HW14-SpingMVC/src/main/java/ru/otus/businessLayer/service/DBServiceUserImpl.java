@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.otus.businessLayer.model.User;
 import ru.otus.daoLayer.core.dao.UserDao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,18 +61,18 @@ public class DBServiceUserImpl implements DBServiceUser {
     }
 
     @Override
-    public Optional<List<User>> getAllUsers() {
+    public List<User> getAllUsers() {
         try (var sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                Optional<List<User>> userOptional = userDao.getAllUsers();
-                logger.info("client: {}", userOptional.orElse(null));
-                return userOptional;
+                List<User> users = userDao.getAllUsers();
+                logger.info("client: {}", users);
+                return users;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
                 sessionManager.rollbackSession();
             }
-            return Optional.empty();
+            return new ArrayList<>();
         }
     }
 }
