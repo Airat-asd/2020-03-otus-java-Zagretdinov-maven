@@ -16,5 +16,5 @@ public interface UserDao {
 
     SessionManager getSessionManager();
 
-    Optional<List<User>> getAllUsers();
+    List<User> getAllUsers();
 }
