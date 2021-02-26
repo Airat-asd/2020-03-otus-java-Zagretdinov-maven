@@ -18,28 +18,32 @@ import java.util.List;
 @Controller
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    FrontendService frontendService;
 
     @Autowired
-    private FrontendService frontendService;
+    public UserController(FrontendService frontendService) {
+        this.frontendService = frontendService;
+    }
 
-    @GetMapping({"/", "/user/list"})
+    @GetMapping({"/"})
     public String clientsListView(Model model) throws InterruptedException {
         List<Dto> dtoUsers = new ArrayList<>();
         frontendService.getAllUsers(data -> dtoUsers.addAll(data.getListOfDtoUsers()));
         Thread.sleep(100);
         model.addAttribute("dtoUsers", dtoUsers);
-        return "usersList.html";
+        return "usersList";
     }
 
     @GetMapping("/user/create")
     public String clientCreateView(Model model) {
         model.addAttribute("dtoUser", new Dto());
-        return "userCreate.html";
+        return "userCreate";
     }
 
     @PostMapping("/user/save")
     public RedirectView clientSave(@ModelAttribute Dto dtoUser) {
-        frontendService.saveUserData(dtoUser, data -> logger.info("!!!!!!!!!!!!!!!!!!!!!!!!!Save user:{}", data.getName()));
-        return new RedirectView("/", true);
+        frontendService.saveUserData(dtoUser, data -> logger.info("Save user:{}", data.getName()));
+        return new RedirectView("/user/create", true);
+
     }
 }

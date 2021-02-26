@@ -49,7 +49,7 @@ public class DBServiceUserImpl implements DBServiceUser {
             sessionManager.beginSession();
             try {
                 Optional<User> userOptional = userDao.findByLogin(login);
-                logger.info("client: {}", userOptional.orElse(null));
+                logger.info("user: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
@@ -65,7 +65,7 @@ public class DBServiceUserImpl implements DBServiceUser {
             sessionManager.beginSession();
             try {
                 Optional<List<User>> userOptional = userDao.getAllUsers();
-                logger.info("client: {}", userOptional.orElse(null));
+                logger.info("user: {}", userOptional.orElse(null));
                 return userOptional;
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);

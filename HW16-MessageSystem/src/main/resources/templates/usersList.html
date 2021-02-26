@@ -4,16 +4,7 @@
     <meta charset="UTF-8"/>
     <title>List of all users</title>
 
-    <script>
-        function getUser(url, valueControlLogin) {
-            const valueControl = document.getElementById(valueControlLogin);
-            const userDataContainer = document.getElementById('userDataContainer');
-            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
-            fetch(fullUrl)
-                .then(response => response.json())
-                .then(client => userDataContainer.innerHTML = JSON.stringify(client));
-        }
-    </script>
+    <script src="/app.js"></script>
 
     <style type="text/css">
         body {
@@ -44,7 +35,7 @@
         }
 
         h3 {
-            background: url("png") no-repeat;
+            background: url("../listmark.png") no-repeat;
             padding: 2px;
             padding-left: 30px;
         }
@@ -87,11 +78,7 @@
     </table>
     <br>
 
-    <a th:href="@{/user/create}" href="userCreate.html">New user</a>
-    <br>
-
-    <h3>Тест View без контроллера:</h3>
-    <a th:href="@{/no-handler-view}">Перейти на View без контроллера</a>
+    <a th:href="@{/user/create}" href="userCreate.html" target="_blank">New user</a>
     <br>
 
     <h3>Найти пользователя по логину:</h3>
