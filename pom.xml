@@ -15,9 +15,7 @@
     </developers>
 
     <modules>
-        <module>HW12-webServerJetty</module>
-        <module>HW13-di</module>
-        <module>HW15-Executor</module>
+        <module>HW14-SpingMVC</module>
     </modules>
 
     <properties>
