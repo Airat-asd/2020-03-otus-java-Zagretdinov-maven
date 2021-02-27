@@ -3,8 +3,34 @@
 <head>
     <meta charset="UTF-8"/>
     <title>List of all users</title>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/main.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
-    <script src="/app.js"></script>
+    <script>
+        let stompClient = null;
+
+        const showMessage = (message) => $("#listUsers").append("<tr><td>" + message + "</td></tr>")
+
+        function getUser(url, valueControlLogin) {
+            const valueControl = document.getElementById(valueControlLogin);
+            const userDataContainer = document.getElementById('userDataContainer');
+            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
+            fetch(fullUrl)
+                .then(response => response.json())
+                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
+        }
+
+        function getListUsers() {
+            const stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
+            stompClient.connect({}, (frame) => {
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/listUsers', (timeMsg) => document.getElementById("currentTime").innerHTML = timeMsg.body);
+            });
+        }
+    </script>
 
     <style type="text/css">
         body {
@@ -59,7 +85,7 @@
     </style>
 
 </head>
-<body>
+<body onload="getListUsers();">
     <h3>Пользователи:</h3>
 
     <table class="DtoUsers">
@@ -77,6 +103,21 @@
         </tbody>
     </table>
     <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table id="conversation" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Login</th>
+                </tr>
+                </thead>
+                <tbody id="listUsers"></tbody>
+            </table>
+        </div>
+    </div>
+
 
     <a th:href="@{/user/create}" href="userCreate.html" target="_blank">New user</a>
     <br>

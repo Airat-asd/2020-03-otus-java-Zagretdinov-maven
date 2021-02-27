@@ -2,7 +2,6 @@ package ru.otus;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +25,6 @@ import ru.otus.messagesystem.message.MessageType;
 @Configuration
 @ComponentScan
 public class DbConfig {
-//    private final ApplicationContext applicationContext;
-
-//    public DbConfig(ApplicationContext applicationContext) {
-//        this.applicationContext = applicationContext;
-//    }
-
     private static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";
     private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
     private static final String DATABASE_SERVICE_CLIENT_NAME = "databaseService";
