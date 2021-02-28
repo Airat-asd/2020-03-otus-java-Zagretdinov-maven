@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.otus.businessLayer.model.User;
+import ru.otus.controllers.UserController;
 import ru.otus.daoLayer.core.dao.UserDao;
 
 import java.util.List;
@@ -29,7 +30,6 @@ public class DBServiceUserImpl implements DBServiceUser {
                 try {
                     message = userDao.insert(user);
                     sessionManager.commitSession();
-
                     logger.info("save {}, id: {}", user.getClass().getSimpleName(), user.getLogin());
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);

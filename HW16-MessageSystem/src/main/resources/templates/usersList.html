@@ -4,60 +4,25 @@
     <meta charset="UTF-8"/>
     <title>List of all users</title>
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
 
     <script>
-        let stompClient = null;
-
-        const showMessage = (message) => $("#listUsers").append("<tr><td>" + message + "</td></tr>")
-
-        function getUser(url, valueControlLogin) {
-            const valueControl = document.getElementById(valueControlLogin);
-            const userDataContainer = document.getElementById('userDataContainer');
-            const fullUrl = url + (valueControl? (encodeURIComponent(valueControl.value)) : '');
-            fetch(fullUrl)
-                .then(response => response.json())
-                .then(user => userDataContainer.innerHTML = JSON.stringify(user));
-        }
-
         function getListUsers() {
             const stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
             stompClient.connect({}, (frame) => {
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/listUsers', (timeMsg) => document.getElementById("currentTime").innerHTML = timeMsg.body);
+                stompClient.subscribe('/topic/response', (dtoUser) => addUserToTable(JSON.parse(dtoUser.body).name, JSON.parse(dtoUser.body).login));
             });
         }
+
+        const addUserToTable = (name, login) => $("#listUsers").append("<tr><td>" + name + "</td><td>" + login + "</td></tr>")
     </script>
 
     <style type="text/css">
         body {
-            padding: 50px;
-        }
-
-        .DtoUsers td {
-            border: 1px solid lightgray;
-            padding: 5px;
-            margin-bottom: 10px;
-        }
-
-        a {
-            display: block;
-        }
-
-        input {
-            width: 150px;
-        }
-
-
-        select {
-            width: 154px;
-        }
-
-        button {
-            width: 200px;
+            padding: 40px;
         }
 
         h3 {
@@ -65,71 +30,31 @@
             padding: 2px;
             padding-left: 30px;
         }
-
-        controls-container {
-            width: 200px;
-        }
-
-        label {
-            display: inline-block;
-            width: 50px;
-        }
     </style>
-
-    <style th:inline="text">
-        h3 {
-            background: url([[@{/listmark.png}]]) no-repeat;
-            padding: 2px;
-            padding-left: 30px;
-        }
-    </style>
-
 </head>
 <body onload="getListUsers();">
-    <h3>Пользователи:</h3>
-
-    <table class="DtoUsers">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Login</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="dtoUser : ${dtoUsers}">
-            <td th:text="${dtoUser.name}">1</td>
-            <td th:text="${dtoUser.login}">John Doe</td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Login</th>
-                </tr>
-                </thead>
-                <tbody id="listUsers"></tbody>
-            </table>
-        </div>
+<h3>Пользователи:</h3>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <table id="conversation" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Login</th>
+            </tr>
+            </thead>
+            <tbody id="listUsers">
+            <tr th:each="dtoUser : ${dtoUsers}">
+                <td th:text="${dtoUser.name}">1</td>
+                <td th:text="${dtoUser.login}">John Doe</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
-
-    <a th:href="@{/user/create}" href="userCreate.html" target="_blank">New user</a>
-    <br>
-
-    <h3>Найти пользователя по логину:</h3>
-
-    <div class="controls-container">
-        <input type="text" id = "userLoginTextBox" value="login" placeholder="Введите login пользователя" >
-        <button onclick="getUser('api/user/', 'userLoginTextBox')">Получить пользователя по login</button>
-    </div>
-
-    <pre id = "userDataContainer"></pre>
+</div>
+<br>
+<a th:href="@{/user/create}" href="userCreate.html" target="_blank">Add new user</a>
 
 </body>
 </html>

@@ -19,10 +19,12 @@ public class Dto extends ResultDataType {
     private char isAnAdministrator = 'n';
 
     public Dto() {
+        listOfDtoUsers = new ArrayList<>();
     }
 
     public Dto(String login) {
         this.login = login;
+        listOfDtoUsers = new ArrayList<>();
     }
 
     public Dto(String login, String name, String password) {
