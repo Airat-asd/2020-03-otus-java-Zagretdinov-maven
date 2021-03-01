@@ -10,7 +10,7 @@ public class AdviceController {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ModelAndView handle(Exception ex) {
-        ModelAndView mav = new ModelAndView("errorView");
+        ModelAndView mav = new ModelAndView("error");
         mav.addObject("error", ex);
         return mav;
     }

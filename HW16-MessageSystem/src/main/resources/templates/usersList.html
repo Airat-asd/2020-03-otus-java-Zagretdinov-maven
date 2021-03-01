@@ -7,18 +7,7 @@
     <script src="/webjars/jquery/jquery.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-
-    <script>
-        function getListUsers() {
-            const stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
-            stompClient.connect({}, (frame) => {
-                console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/response', (dtoUser) => addUserToTable(JSON.parse(dtoUser.body).name, JSON.parse(dtoUser.body).login));
-            });
-        }
-
-        const addUserToTable = (name, login) => $("#listUsers").append("<tr><td>" + name + "</td><td>" + login + "</td></tr>")
-    </script>
+    <script src="/app.js"></script>
 
     <style type="text/css">
         body {
@@ -55,6 +44,8 @@
 </div>
 <br>
 <a th:href="@{/user/create}" href="userCreate.html" target="_blank">Add new user</a>
+<br>
+<a th:href="@{/user/createSecondOption}" href="userCreateSecondOption.html" target="_blank">Add new user use second option</a>
 
 </body>
 </html>

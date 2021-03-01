@@ -3,6 +3,7 @@ package ru.otus.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -14,8 +15,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import ru.otus.businessLayer.dto.Dto;
 import ru.otus.front.FrontendService;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping({"/"})
-    public String clientsListView(Model model) throws InterruptedException {
+    public String usersListView(Model model) throws InterruptedException {
         List<Dto> dtoUsers = new ArrayList<>();
         frontendService.getAllUsers(data -> dtoUsers.addAll(data.getListOfDtoUsers()));
         Thread.sleep(100);
@@ -40,22 +39,29 @@ public class UserController {
         return "usersList";
     }
 
+    @MessageMapping("/addUser")
     @SendTo("/topic/response")
-    public void addUser(Dto dtoUser) {
-        logger.info("Send DTO = {}, {}", dtoUser.getName(), dtoUser.getLogin());
-        template.convertAndSend("/topic/response", dtoUser);
-
+    public Dto addUserSecondOption(Dto dtoUser) {
+        frontendService.saveUserData(dtoUser, data -> logger.info("Save user: {}", data));
+        logger.info("Send new user");
+        return dtoUser;
     }
-//    @SendTo("/topic/response")
-//    public Dto addUser(Dto dtoUser) {
-//        logger.info("Send DTO = {}, {}", dtoUser.getName(), dtoUser.getLogin());
-//        return dtoUser;
-//    }
+
+    public void addUser(Dto dtoUser) {
+        logger.info("Send new user");
+        template.convertAndSend("/topic/response", dtoUser);
+    }
 
     @GetMapping("/user/create")
     public String clientCreateView(Model model) {
         model.addAttribute("dtoUser", new Dto());
         return "userCreate";
+    }
+
+    @GetMapping("/user/createSecondOption")
+    public String clientCreateSecondOptionView(Model model) {
+        model.addAttribute("dtoUser", new Dto());
+        return "userCreateSecondOption";
     }
 
     @PostMapping("/user/save")
