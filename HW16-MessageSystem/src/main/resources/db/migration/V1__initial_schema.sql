@@ -5,5 +5,4 @@ create table tUsers
     passwordHash integer,
     isAnAdministrator char(1)
 );
-
-insert into tUsers values ('login', 'n', 'name', 12345);
+insert into tUsers values ('login1', 'name1', 12345, 'n');

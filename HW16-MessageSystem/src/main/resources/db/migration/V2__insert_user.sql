@@ -1,0 +1,1 @@
+insert into tUsers values ('login2', 'name2', 12345, 'n');
