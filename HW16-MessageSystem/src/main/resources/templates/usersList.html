@@ -8,6 +8,12 @@
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
+    <script>
+    $(document).ready (function(){
+     getListUsers();
+     loadUsers();
+     });
+    </script>
 
     <style type="text/css">
         body {
@@ -19,9 +25,10 @@
             padding: 2px;
             padding-left: 30px;
         }
+
     </style>
 </head>
-<body onload="getListUsers();">
+<body>
 <h3>Пользователи:</h3>
 <br>
 <div class="row">
@@ -45,7 +52,8 @@
 <br>
 <a th:href="@{/user/create}" href="userCreate.html" target="_blank">Add new user</a>
 <br>
-<a th:href="@{/user/createSecondOption}" href="userCreateSecondOption.html" target="_blank">Add new user use second option</a>
+<a th:href="@{/user/createSecondOption}" href="userCreateSecondOption.html" target="_blank">Add new user use second
+    option</a>
 
 </body>
 </html>
