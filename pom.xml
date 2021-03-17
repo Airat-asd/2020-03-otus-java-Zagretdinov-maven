@@ -17,6 +17,11 @@
     <modules>
         <module>HW14-SpingMVC</module>
         <module>HW17-gRPC</module>
+        <module>HW12-webServerJetty</module>
+        <module>HW13-di</module>
+        <module>HW15-Executor</module>
+        <module>HW16-MessageSystem</module>
+        <module>MessageSystem</module>
     </modules>
 
     <properties>
