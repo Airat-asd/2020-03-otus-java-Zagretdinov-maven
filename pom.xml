@@ -20,7 +20,6 @@
         <module>HW15-Executor</module>
         <module>HW16-MessageSystem</module>
         <module>MessageSystem</module>
-
     </modules>
 
     <properties>
