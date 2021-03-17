@@ -16,6 +16,8 @@ import ru.otus.services.TemplateProcessorImpl;
 import ru.otus.services.UserAuthService;
 import ru.otus.services.UserAuthServiceImpl;
 
+import java.util.Properties;
+
 
 public class MainClassWebServer {
     private static final String HIBERNATE_CFG_FILE = "hibernate.cfg.xml";

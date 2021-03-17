@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+
+    <meta charset="UTF-8"/>
+    <title>Create a new user with the second option</title>
+    <style type="text/css">
+        body {
+            padding: 40px;
+        }
+        label {
+            display: inline-block;
+            padding: 3px;
+            width: 40px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>New User:</h1>
+
+<div class="col-md-6">
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="login">Login</label>
+            <br>
+            <input type="text" id="login" class="form-control" placeholder="login...">
+            <br><br>
+            <label for="name">Name</label>
+            <br>
+            <input type="text" id="name" class="form-control" placeholder="name...">
+            <br><br>
+            <label for="password">Password</label>
+            <br>
+            <input type="password" id="password" class="form-control" >
+
+        </div>
+        <button id="send" class="btn btn-default" type="submit">Send</button>
+        <button class="btn btn-default" type="reset">Reset</button>
+
+    </form>
+</div>
+</body>
+</html>
