@@ -1,10 +1,22 @@
-let stompClient = Stomp.over(new SockJS('/gs-guide-websocket'));
+var stompClient = null;
 
 function getListUsers() {
-    stompClient.connect({}, (frame) => {
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/response', (dtoUser) => addUserToTable(JSON.parse(dtoUser.body).name, JSON.parse(dtoUser.body).login));
-    });
+    connect();
+}
+
+function loadUsers() {
+    var request = new XMLHttpRequest();
+    request.open('PUT', '/api/users');
+    request.send();
+}
+
+function connect() {
+      var socket = new SockJS('/gs-guide-websocket');
+      stompClient = Stomp.over(socket);
+      stompClient.connect({}, function(frame) {
+      console.log('Connected: ' + frame);
+      stompClient.subscribe('/topic/response', (dtoUser) => addUserToTable(JSON.parse(dtoUser.body).name, JSON.parse(dtoUser.body).login));
+      });
 }
 
 const addUserToTable = (name, login) => $("#listUsers").append("<tr><td>" + name + "</td><td>" + login + "</td></tr>")
