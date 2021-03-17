@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.socket.config.WebSocketMessageBrokerStats;
 import ru.otus.businessLayer.dto.Dto;
 import ru.otus.front.FrontendService;
 
@@ -23,19 +24,17 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     private final FrontendService frontendService;
     private final SimpMessagingTemplate template;
+    private final WebSocketMessageBrokerStats webSocketMessageBrokerStats;
 
     @Autowired
-    public UserController(FrontendService frontendService, SimpMessagingTemplate template) {
+    public UserController(FrontendService frontendService, SimpMessagingTemplate template, WebSocketMessageBrokerStats webSocketMessageBrokerStats) {
         this.frontendService = frontendService;
         this.template = template;
+        this.webSocketMessageBrokerStats = webSocketMessageBrokerStats;
     }
 
     @GetMapping({"/"})
-    public String usersListView(Model model) throws InterruptedException {
-        List<Dto> dtoUsers = new ArrayList<>();
-        frontendService.getAllUsers(data -> dtoUsers.addAll(data.getListOfDtoUsers()));
-        Thread.sleep(100);
-        model.addAttribute("dtoUsers", dtoUsers);
+    public String usersListView(Model model) {
         return "usersList";
     }
 
